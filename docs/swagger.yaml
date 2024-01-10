@@ -1,0 +1,82 @@
+basePath: /api/v1
+definitions:
+  entities.Response:
+    properties:
+      data: {}
+      message:
+        type: string
+    type: object
+  entities.User:
+    properties:
+      id:
+        type: string
+      user_name:
+        type: string
+    required:
+    - user_name
+    type: object
+  entities.errorFormat:
+    properties:
+      code:
+        type: string
+      message:
+        type: string
+    type: object
+externalDocs:
+  description: OpenAPI
+  url: https://swagger.io/resources/open-api/
+host: localhost:9999
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: This is a simple clean architect project
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Go Clean Simple
+  version: "1.0"
+paths:
+  /user:
+    post:
+      consumes:
+      - application/json
+      description: create one user
+      parameters:
+      - description: User Info
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/entities.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            allOf:
+            - $ref: '#/definitions/entities.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/entities.User'
+              type: object
+        "400":
+          description: fail
+          schema:
+            allOf:
+            - $ref: '#/definitions/entities.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/entities.errorFormat'
+              type: object
+      summary: Create user
+schemes:
+- http
+- https
+securityDefinitions:
+  BasicAuth:
+    type: basic
+swagger: "2.0"

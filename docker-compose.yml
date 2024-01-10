@@ -1,0 +1,38 @@
+version: '3.9'
+
+services:
+  db_postgre:
+    container_name: go-clean-architecture-postgre
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_DB: ${DATABASE_POSTGRESQL_NAME}
+      POSTGRES_USER: ${DATABASE_POSTGRESQL_USER_NAME}
+      POSTGRES_PASSWORD: ${DATABASE_POSTGRESQL_PASSWORD}
+    ports:
+      - "55432:5432"
+    volumes:
+      - ./data/postgre:/var/lib/postgresql/data
+      - ./init-scripts:/docker-entrypoint-initdb.d
+    networks:
+      - go_clean_architecture_net
+
+  api:
+    container_name: go-clean-architecture
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "9999:9999"
+    depends_on:
+      - db_postgre
+    networks:
+      - go_clean_architecture_net
+
+
+volumes:
+  data:
+networks:
+  go_clean_architecture_net:
+    driver: bridge
